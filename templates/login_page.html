@@ -1,0 +1,122 @@
+{% extends "layout.html" %}
+
+{% block title %}
+	Sign in
+{% endblock title %}
+
+
+
+{% block content %}
+	<script>
+		$(document).ready(function(){
+  		 	$(".active").removeClass("active");
+  		 	$("#account").addClass("active");
+		});
+	</script>
+
+	<style>
+		#login-frame {
+			margin-top:60px;
+
+			border:solid;
+			border-width:1px;
+			border-color:#e9f4f3;
+			padding-top:10px;
+			padding-bottom:10px;
+			background:#e9f4f3;
+		}
+		.signup-header {
+			padding-top:20px;
+			padding-bottom:50px;
+		}
+
+	</style>
+
+
+			<form class="col-lg-6 offset-lg-3" id="login-frame" method="post" action="{{url_for("login_page2")}}"  novalidate>
+
+				<div class="row justify-content-center">
+					<h3 style="font-size:35px;" class="signup-header">Sign in</h3>
+				</div>
+				<div class="form-group row">
+ 				   <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+ 				   <div class="col-sm-10">
+ 				     <input type="email" value="{{typed_email}}" class="form-control" name="email" id="inputEmail3" placeholder="Email" required>
+					   <div class="invalid-feedback">
+      					  Please type a valid email address !
+      					</div>
+ 				   </div>
+
+ 				 </div>
+ 				 <div class="form-group row">
+ 				   <label for="validationCustom01" class="col-sm-2 col-form-label">Password</label>
+ 				   <div class="col-sm-10">
+ 				     <input type="password" class="form-control" name="password" id="validationCustom01" placeholder="Password" required>
+					   <div class="invalid-feedback">
+      					  This field is required
+      					</div>
+ 				   </div>
+
+ 				 </div>
+        	 	 <div class="form-group row">
+ 				   <div class="col-sm-2"></div>
+
+
+ 				 </div>
+ 				 <div class="form-group row">
+ 				   <div class="col-sm-2"></div>
+ 				   <div class="col-sm-10">
+ 				     <div class="custom-control custom-checkbox">
+					  <input type="checkbox" name="remember_me" class="custom-control-input" id="customCheck1">
+					  <label class="custom-control-label" for="customCheck1">Remember me</label>
+					</div>
+ 				   </div>
+ 				 </div>
+				 <div class="form-group row">
+				   <div class="col-sm-2"></div>
+ 				   <div class="col-sm-10">
+					   <p>If you haven't an account yet, <a href="#">sign up</a> for free !</p>
+
+				   </div>
+				   <div class="col-sm-2"></div>
+ 				   <div class="col-sm-10">
+ 				       <label>
+
+ 				       </label>
+ 				   </div>
+				 </div>
+ 				 <div class="form-group row">
+ 				   <div class="col-sm-10">
+ 				     <button type="submit" class="btn btn-primary">Sign in</button>
+ 				   </div>
+ 				 </div>
+ 			</form>
+		<div style="padding-bottom:100px;">
+
+		</div>
+
+
+
+<script>
+
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+
+    var forms = document.getElementsByClassName('col-lg-6 offset-lg-3');
+
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+
+</script>
+
+{% endblock content %}
