@@ -1,0 +1,140 @@
+{% extends "layout.html" %}
+
+{% block title %}
+	Your Account
+{% endblock title %}
+
+
+{% block content %}
+
+	<script>
+		$(document).ready(function(){
+  		 	$(".active").removeClass("active");
+  		 	$("#account").addClass("active");
+		});
+	</script>
+	<style>
+
+
+
+		 .cover {
+
+		     background-size: cover;
+		     background-repeat: no-repeat
+		 }
+
+	</style>
+<div class="row py-5 px-4">
+    <div class="col-md-8 mx-auto">
+        <!-- Profile widget -->
+        <div class="bg-white shadow rounded overflow-hidden">
+
+
+            <div class="px-4 py-3">
+                <h5 class="mb-0">About</h5>
+                <div class="p-4 rounded shadow-sm bg-light">
+					<p class="font-italic mb-0"><strong>Your name:</strong> {{ user.name }}</p>
+					<p class="font-italic mb-0"><strong>Your email address:</strong> {{ user.email }}</p>
+                    <p class="font-italic mb-0"><strong>Your favorite restaurant:</strong> ---</p>
+					<p class="font-italic mb-0"><strong>Your favorite meal:</strong> ---</p>
+					<p class="font-italic mb-0"><strong>Your favorite time to eat:</strong> ---</p>
+                </div>
+            </div>
+			<h5 style="padding-left:20px;" class="mb-0">Participants:</h5>
+
+			<div class="card" style="margin:30px;">
+			  <div class="card-body">
+				  <strong>{{ user.name }}</strong>
+				  <label class="font-italic mb-0">(admin)</label>
+				  <label style="padding-left:3%;" class=" mb-0">Orders:--</label>
+				  <label style="padding-left:3%;" class=" mb-0">Fav. meal:--</label>
+			  </div>
+			</div>
+			{% for parti in parti %}
+				<div class="card" style="margin:30px;">
+				  <div class="card-body">
+					  <strong>{{ parti }}</strong>
+					  <label style="padding-left:3%;" class=" mb-0">Orders:--</label>
+					  <label style="padding-left:3%;" class=" mb-0">Fav. meal:--</label>
+					  <a href="{{url_for("delete_parti",name=parti)}}" style="margin-right:10px" class="btn btn-danger btn-sm float-right">Delete</a>
+				  </div>
+				</div>
+			{% endfor %}
+			<div style="margin:30px;">
+				<div class="collapse" id="collapseExample">
+				  <div class="card card-body">
+					  <strong style="padding-bottom:5px;font-size: 18px;">New participant:</strong>
+				    <form class="form-inline needs-validation" method="post" style="margin-top:10px;" action="{{url_for("add_parti")}}">
+					  <label style="padding-right:10px;padding-bottom:10px;">Name:</label>
+					  <input name="name"  type="text" class="form-control mb-2 mr-sm-2" id="validationCustom01" placeholder="Name" required>
+					  <button type="submit" class="btn btn-primary mb-2">Add</button>
+					</form>
+				  </div>
+				</div>
+				<p>
+
+				  <button id="add-parti" style="margin-top:10px;" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+				    + add participant
+				  </button>
+				</p>
+			</div>
+
+			<h5 style="padding-left:20px;" class="mb-0">Restaurants:</h5>
+
+			{% for res in res %}
+				<div class="card" style="margin:30px;">
+				  <div class="card-body">
+					  <strong>{{ res }}</strong>
+					  <a href="{{url_for("delete_rest",name=res)}}" style="margin-right:10px" class="btn btn-danger btn-sm float-right">Delete</a>
+				  </div>
+				</div>
+			{% endfor %}
+			<div style="margin:30px;padding-bottom:100px;">
+				<div class="collapse" id="collapseExample2">
+				  <div class="card card-body">
+					  <strong style="padding-bottom:5px;font-size: 18px;">New restaurant:</strong>
+				    <form class="form-inline needs-validation" method="post" style="margin-top:10px;" action="{{url_for("add_rest")}}">
+					  <label style="padding-right:10px;padding-bottom:10px;">Name:</label>
+					  <input name="name-res"  type="text" class="form-control mb-2 mr-sm-2" placeholder="Restaurant" required>
+					  <button type="submit" class="btn btn-primary mb-2">Add</button>
+					</form>
+				  </div>
+				</div>
+				<p>
+
+				  <button id="add-rest" style="margin-top:10px;" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample">
+				    + add restaurant
+				  </button>
+				</p>
+				<input type="time">
+			</div>
+
+
+
+        </div>
+    </div>
+</div>
+
+<script>
+	$(document).ready(function(){
+	 $('#add-parti').on('click', function () {
+	  var text=$('#add-parti').text();
+	  if(text === "- add participant"){
+	    $(this).html('+ add participant');
+	  } else{
+	    $(this).text('- add participant');
+	 }
+	});
+	});
+	$(document).ready(function(){
+	 $('#add-rest').on('click', function () {
+	  var text=$('#add-rest').text();
+	  if(text === "- add restaurant"){
+	    $(this).html('+ add restaurant');
+	  } else{
+	    $(this).text('- add restaurant');
+	 }
+	});
+	});
+</script>
+{% endblock content %}

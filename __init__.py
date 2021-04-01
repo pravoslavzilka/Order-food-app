@@ -1,6 +1,6 @@
-from flask import Flask, render_template, redirect, url_for, request, flash
+from flask import Flask, render_template, redirect, url_for, request, flash, session
 from database import db_session
-from models import User
+from models import User, Order
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
 app = Flask(__name__)
@@ -83,6 +83,60 @@ def register_page2():
         flash("Welcome to our site !","success")
         login_user(u)
         return redirect(url_for("home_page"))
+
+
+@login_required
+@app.route("/account/")
+def account_page():
+    u = load_user(current_user.get_id())
+
+    # participants
+    parti = u.participants.split()
+    res = u.restaurants.split()
+    ord = Order.query.filter(User.name in parti).first()
+    return render_template("account_page.html", user=u, parti=parti, ord=ord, res=res)
+
+
+@login_required
+@app.route("/account/add_participant/",methods=["POST"])
+def add_parti():
+    u = load_user(current_user.get_id())
+    u.participants += request.form["name"] + " "
+    db_session.commit()
+    return redirect(url_for("account_page"))
+
+
+@login_required
+@app.route("/account/delete_participant/<name>/")
+def delete_parti(name):
+    u = load_user(current_user.get_id())
+    parti = u.participants.split()
+    parti.remove(name)
+    names = ' '.join([str(elem) for elem in parti])
+    u.participants = names
+    db_session.commit()
+    return redirect(url_for("account_page"))
+
+
+@login_required
+@app.route("/account/add_restaurant/",methods=["POST"])
+def add_rest():
+    u = load_user(current_user.get_id())
+    u.restaurants += request.form["name-res"] + " "
+    db_session.commit()
+    return redirect(url_for("account_page"))
+
+
+@login_required
+@app.route("/account/delete_restaurants/<name>/")
+def delete_rest(name):
+    u = load_user(current_user.get_id())
+    rest = u.restaurants.split()
+    rest.remove(name)
+    names = ' '.join([str(elem) for elem in rest])
+    u.restaurants = names
+    db_session.commit()
+    return redirect(url_for("account_page"))
 
 
 @login_manager.user_loader
