@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- CSS -->
+    <link rel="stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/main.css') }}">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <title>{% block title %}{% endblock title %}</title>
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=True) %}
+			{% if messages %}
+				{% for category,message in messages %}
+					<div style="margin:10px;" class="alert alert-{{category}}">
+						{{message}}
+					</div>
+				{% endfor %}
+			{% endif %}
+		{% endwith %}
+    <nav id="nav-bar-menu" class="navbar navbar-expand-lg navbar-light bg-light">
+      <a  href="#"><img style="height:120px;" class="own-logo" src="{{url_for('static', filename='images/logo.png')}}" /></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+
+        </ul>
+        <ul class="navbar-nav ">
+            <li class="nav-item">
+                <a href="#" class="btn btn-outline-success my-2 my-sm-0 nav-item">Account</a>
+            </li>
+            <li class="nav-item">
+                <button class="btn btn-success my-2 my-sm-0 nav-item" id="sign-up-btn">Basket</button>
+            </li>
+        </ul>
+
+      </div>
+    </nav>
+    <main class="content">
+        {% block content %}{% endblock content %}
+    </main>
+    <footer class="footer">
+      <div id="footer-lop" >
+	      <!-- Footer Links -->
+	      <div class="container">
+	        <!-- Grid row-->
+	        <div class="row text-center d-flex justify-content-center pt-5 mb-3">
+	          <!-- Grid column -->
+	          <div class="col-md-2 mb-3">
+	            <h6 class="text-uppercase font-weight-bold">
+	              <a href="#">About us</a>
+	            </h6>
+	          </div>
+	          <!-- Grid column -->
+	          <!-- Grid column -->
+	          <div class="col-md-2 mb-3">
+	            <h6 class="text-uppercase font-weight-bold">
+	              <a href="#">Help</a>
+	            </h6>
+	          </div>
+	          <!-- Grid column -->        <!-- Grid column -->
+	          <div class="col-md-2 mb-3">
+	            <h6 class="text-uppercase font-weight-bold">
+	              <a href="#">Contact</a>
+	            </h6>
+	          </div>
+	          <!-- Grid column -->
+	    		<div class="col-md-2 mb-3">
+	        	    <h6 class="text-uppercase font-weight-bold">
+	        	      <a href="#">Sign up</a>
+	        	    </h6>
+	        	  </div>
+	        	</div>
+	        <!-- Grid row-->
+	    	  <div style="padding-bottom:10px;" class="col-md-12 mb-9">
+	    	  	<div class="text-muted policy-terms" style="text-align: center;">
+	    			<a style="text-decoration:none;" class="text-muted" href="#">Privacy Policy</a>
+	    			<label >|</label>
+	    			<a style="text-decoration:none;" class="text-muted" href="#">Terms of use</a>
+	    			<label >|</label>
+	    			<a style="text-decoration:none;" class="text-muted" href="#">Cookies Policy</a>
+	    	  	</div>
+	    	  </div>
+	      <!-- Copyright -->
+	    	  <div style="text-align: center;color:white;">
+	    	  	<label >&copy; Direct Food</label>
+	    	  </div>
+	      </div>
+	      <!-- Copyright -->
+	    </div>
+    </footer>
+</body>
+</html>
