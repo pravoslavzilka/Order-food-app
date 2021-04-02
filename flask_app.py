@@ -275,11 +275,22 @@ def load_user(user_id):
     return User.query.filter(User.id == user_id).first()
 
 
+@app.errorhandler(404)
+def error404_fun(error):
+    return render_template("404.html")
+
+
 # closing connection with db
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     db_session.remove()
 
 
+@app.shell_context_processor
+def make_shell_context():
+    return dict(db="food_order.db", User=User, Order=Order)
+
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
+

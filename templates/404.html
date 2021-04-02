@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block title %}
+	Page was not found
+{% endblock title %}
+
+{% block meta_tags %}
+	<meta name="robots" content="noindex">
+{% endblock meta_tags %}
+
+{% block content %}
+    <style>
+        #login-frame {
+			margin-top:60px;
+
+			border:solid;
+			border-width:1px;
+			border-color:#e9f4f3;
+			padding-top:10px;
+			padding-bottom:10px;
+			background:#e9f4f3;
+		}
+
+    </style>
+    <div class="col-lg-6 offset-lg-3 " id="login-frame">
+        <h1>Page doesn't exist </h1>
+        <p style="padding-top:30px;">Page you looking for doesn't exist. Make sure, that you took valid url address.</p>
+        <p>Back to the <a href="{{url_for("account_page")}}">page</a></p>
+    </div>
+    <div class="space">
+
+    </div>
+{% endblock content %}
