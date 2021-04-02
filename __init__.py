@@ -127,29 +127,44 @@ def account_page():
             else:
                 next_rest = res[index_res+1]
         else:
-            next_rest = res[0]
+            if res:
+                next_rest = res[0]
+            else:
+                next_rest = ""
         parti.pop(0)
     else:
         wiot = u.name   # wiot = Who Is Ordering Today
         next_rest = res[0] if res else ""
 
-    # finding favorite meal
+
     fav_meal = {}
-    for para in all_parti:
-        meals = []
-        for o1 in ord:
-            dict1 = dict(e.split(' : ') for e in o1.orders.split(','))
-            meals.append(dict1.get(para))
-        print(meals)
-        cnt = Counter(meals).most_common()[0][0]
-        fav_meal[para] = cnt
-    print(fav_meal)
+    if ord:
+        # finding favorite meal
+        for para in all_parti:
+            meals = []
+            for o1 in ord:
+                dict1 = dict(e.split(' : ') for e in o1.orders.split(','))
+                meals.append(dict1.get(para))
+            cnt = Counter(meals).most_common()[0][0]
+            fav_meal[para] = cnt
 
-
+        # finding favorite time and restaurant
+        times = []
+        restaurants = []
+        for order in ord:
+            times.append(order.time)
+            restaurants.append(order.restaurant)
+        fav_times = Counter(times).most_common()[0][0]
+        fav_restaurants = Counter(restaurants).most_common()[0][0]
+    else:
+        fav_times = "No Data"
+        fav_restaurants = "No Data"
+    non_order = False if ord else True
     time_order = random_hour(time[0],time[1])   # generate random hour to eat
     non_rest = False if res else True
-    return render_template("account_page.html",non_rest=non_rest,time_order=time_order, next_rest=next_rest, user=u,
-                           parti=parti,wiot=wiot, ord=ord, res=res,time=time)
+    return render_template("account_page.html",non_order=non_order,fav_meal=fav_meal,non_rest=non_rest,
+                           time_order=time_order, next_rest=next_rest, user=u,parti=parti,wiot=wiot,
+                           ord=ord, res=res,time=time, fav_restaurants=fav_restaurants,fav_times=fav_times)
 
 
 # function for generate random hour

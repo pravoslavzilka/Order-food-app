@@ -104,9 +104,8 @@
                 <div class="p-4 rounded shadow-sm bg-light">
 					<p class="font-italic mb-0"><strong>Your name:</strong> {{ user.name }}</p>
 					<p class="font-italic mb-0"><strong>Your email address:</strong> {{ user.email }}</p>
-                    <p class="font-italic mb-0"><strong>Your favorite restaurant:</strong> ---</p>
-					<p class="font-italic mb-0"><strong>Your favorite meal:</strong> ---</p>
-					<p class="font-italic mb-0"><strong>Your favorite time to eat:</strong> ---</p>
+                    <p class="font-italic mb-0"><strong>Your favorite restaurant:</strong> {{fav_restaurants}}</p>
+					<p class="font-italic mb-0"><strong>Your favorite time to eat:</strong> {{fav_times}}</p>
                 </div>
             </div>
 			<h5 style="padding-left:20px;" class="mb-0">Time:</h5>
@@ -115,6 +114,7 @@
 			  <div class="card-body">
 
 				<form class="form-inline" method="post" action="{{url_for("change_time")}}">
+				  	<img style="height:25px;margin-top:4px;margin-right:10px;margin-left:5px;" src="{{url_for("static",filename="images/time_icon.png")}}">
 					<label style="padding-right:10px;">From:</label>
 				  <div class="form-group ">
 
@@ -134,8 +134,11 @@
 				  <img style="height:35px;margin-bottom:5px;margin-right:5px;" src="{{url_for("static",filename="images/user_icon.png")}}">
 				  <strong>{{ user.name }}</strong>
 				  <label class="font-italic mb-0">(admin)</label>
-				  <label style="padding-left:3%;" class=" mb-0">Orders:--</label>
-				  <label style="padding-left:3%;" class=" mb-0">Fav. meal:--</label>
+				  {% if non_order %}
+				  	<label style="padding-left:3%;" class=" mb-0">Fav. meal: No data</label>
+				  {% else %}
+				  	<label style="padding-left:3%;" class=" mb-0">Fav. meal: {{ fav_meal[user.name] }}</label>
+				  {% endif %}
 			  </div>
 			</div>
 			{% for parti in parti %}
@@ -143,8 +146,11 @@
 				  <div class="card-body">
 					  <img style="height:35px;margin-bottom:5px;margin-right:5px;" src="{{url_for("static",filename="images/user_icon.png")}}">
 					  <strong>{{ parti }}</strong>
-					  <label style="padding-left:3%;" class=" mb-0">Orders:--</label>
-					  <label style="padding-left:3%;" class=" mb-0">Fav. meal:--</label>
+					  {% if non_order %}
+					  	<label style="padding-left:3%;" class=" mb-0">Fav. meal: No data</label>
+					  {% else %}
+					  	<label style="padding-left:3%;" class=" mb-0">Fav. meal: {{ fav_meal[parti] }}</label>
+					  {% endif %}
 					  <a href="{{url_for("delete_parti",name=parti)}}" style="margin-right:10px" class="btn btn-danger btn-sm float-right">Delete</a>
 				  </div>
 				</div>
@@ -168,7 +174,7 @@
 				</p>
 			</div>
 
-			<h5 style="padding-left:20px;" class="mb-0">Restaurants:</h5>
+			<h5 style="padding-left:20px;padding-top:30px;" class="mb-0">Restaurants:</h5>
 
 			{% for res in res %}
 				<div class="card" style="margin:30px;">
@@ -179,7 +185,7 @@
 				  </div>
 				</div>
 			{% endfor %}
-			<div style="margin:30px;padding-bottom:100px;">
+			<div style="margin:30px;">
 				<div class="collapse" id="collapseExample2">
 				  <div class="card card-body">
 					  <strong style="padding-bottom:5px;font-size: 18px;">New restaurant:</strong>
@@ -196,6 +202,36 @@
 				    + add restaurant
 				  </button>
 				</p>
+			</div>
+
+			<div style="padding-top:30px;margin-left:-20px;margin:30px;padding-bottom:100px;">
+				<h5 style="padding-bottom:20px;" class="mb-0">Your past orders:</h5>
+				{% if non_order %}
+				<p style="padding-left:20px;"><strong>no data yet</strong></p>
+				{% else %}
+					<table class="table">
+					  <thead>
+					    <tr>
+					      <th scope="col">#</th>
+					      <th scope="col">Who ordered</th>
+					      <th scope="col">Restaurant</th>
+					      <th scope="col">Time</th>
+					    </tr>
+					  </thead>
+					  <tbody>
+					  	{% for order in ord %}
+					    	<tr>
+					    	  <th scope="row">{{loop.index}}</th>
+					    	  <td>{{order.name}}</td>
+					    	  <td>{{order.restaurant}}</td>
+					    	  <td>{{order.time}}</td>
+					    	</tr>
+
+					    {% endfor %}
+
+					  </tbody>
+					</table>
+				{% endif %}
 			</div>
 
 
