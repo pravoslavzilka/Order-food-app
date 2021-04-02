@@ -3,6 +3,7 @@ from database import db_session
 from models import User, Order
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from random import randint
+from collections import Counter
 
 app = Flask(__name__)
 app.secret_key = b'\xab\xfa&\xb9\x9eB\xd4\x07[\x00\xea~\xb1\xd7tj'
@@ -98,38 +99,52 @@ def account_page():
     time = u.time.split()
     all_parti = parti[:]
     all_parti.append(u.name)
-
-    ord = Order.query.filter(User.name.in_(all_parti)).all()  # past orders
+    ord = Order.query.filter(Order.name.in_(all_parti)).all()  # past orders
+    # making an order
     if ord and parti:
         # wiot configurations
         last_ord = ord[-1]
 
         parti.insert(0,u.name)
         last_person = last_ord.name
-        index = parti.index(last_person)
-        total_index = len(parti)-1
-        print(last_person)
-        print(parti)
-        print(index)
-        if index == total_index:
-            wiot = parti[0]
+        if last_person in parti:
+            index = parti.index(last_person)
+            total_index = len(parti)-1
+            if index == total_index:
+                wiot = parti[0]
+            else:
+                wiot = parti[index+1]
         else:
-            wiot = parti[index+1]
+            wiot = parti[0]
 
         # restaurant config
         last_rest = last_ord.restaurant
-        index_res = res.index(last_rest)
-        total_index_res = len(res)-1
-        if index_res == total_index_res:
-            next_rest = res[0]
-            print("sfsdfdf")
+        if last_rest in res:
+            index_res = res.index(last_rest)
+            total_index_res = len(res)-1
+            if index_res == total_index_res:
+                next_rest = res[0]
+            else:
+                next_rest = res[index_res+1]
         else:
-            print("qeqwe")
-            next_rest = res[index_res+1]
+            next_rest = res[0]
         parti.pop(0)
     else:
         wiot = u.name   # wiot = Who Is Ordering Today
         next_rest = res[0] if res else ""
+
+    # finding favorite meal
+    fav_meal = {}
+    for para in all_parti:
+        meals = []
+        for o1 in ord:
+            dict1 = dict(e.split(' : ') for e in o1.orders.split(','))
+            meals.append(dict1.get(para))
+        print(meals)
+        cnt = Counter(meals).most_common()[0][0]
+        fav_meal[para] = cnt
+    print(fav_meal)
+
 
     time_order = random_hour(time[0],time[1])   # generate random hour to eat
     non_rest = False if res else True
