@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, flash, session
+from flask import Flask, render_template, redirect, url_for, request, flash
 from database import db_session
 from models import User, Order
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
@@ -6,7 +6,7 @@ from random import randint
 from collections import Counter
 
 app = Flask(__name__)
-app.secret_key = b'\xab\xfa&\xb9\x9eB\xd4\x07[\x00\xea~\xb1\xd7tj'
+app.secret_key = b'supersecretcode'
 
 # flask-login
 login_manager = LoginManager()
@@ -152,19 +152,25 @@ def account_page():
         times = []
         restaurants = []
         for order in ord:
-            times.append(order.time)
+            list1 = list(order.time)
+            del list1[2]
+            time2 = int("".join(list1))
+            times.append(time2)
             restaurants.append(order.restaurant)
-        fav_times = Counter(times).most_common()[0][0]
+        avg_times = int(sum(times)/len(times))
+        avg_time2 = list(str(avg_times))
+        avg_time2.insert(2,":")
+        avg_time3 = "".join(avg_time2)
         fav_restaurants = Counter(restaurants).most_common()[0][0]
     else:
-        fav_times = "No Data"
+        avg_time3 = "No Data"
         fav_restaurants = "No Data"
     non_order = False if ord else True
     time_order = random_hour(time[0],time[1])   # generate random hour to eat
     non_rest = False if res else True
     return render_template("account_page.html",non_order=non_order,fav_meal=fav_meal,non_rest=non_rest,
                            time_order=time_order, next_rest=next_rest, user=u,parti=parti,wiot=wiot,
-                           ord=ord, res=res,time=time, fav_restaurants=fav_restaurants,fav_times=fav_times)
+                           ord=ord, res=res,time=time, fav_restaurants=fav_restaurants,avg_times=avg_time3)
 
 
 # function for generate random hour
