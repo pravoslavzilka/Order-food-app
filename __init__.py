@@ -2,6 +2,7 @@ from flask import Flask, render_template, redirect, url_for, request, flash, ses
 from database import db_session
 from models import User, Order
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from random import randint
 
 app = Flask(__name__)
 app.secret_key = b'\xab\xfa&\xb9\x9eB\xd4\x07[\x00\xea~\xb1\xd7tj'
@@ -16,7 +17,9 @@ login_manager.login_message_category = "info"
 
 @app.route("/")
 def home_page():
-    return render_template("index.html")
+    if current_user.is_authenticated:
+        return redirect(url_for('account_page'))
+    return redirect(url_for("login_page"))
 
 
 @app.route("/sign_in/",methods=["GET"])
@@ -93,8 +96,55 @@ def account_page():
     parti = u.participants.split()  # participants
     res = u.restaurants.split() # restaurants
     time = u.time.split()
-    ord = Order.query.filter(User.name in parti).first()  # past orders
-    return render_template("account_page.html", user=u, parti=parti, ord=ord, res=res,time=time)
+    ord = Order.query.filter(User.name in parti).all()  # past orders
+    if ord:
+        # wiot configurations
+        last_ord = ord[-1]
+        parti.insert(0,u.name)
+        last_person = last_ord.name
+        index = parti.index(last_person)
+        total_index = len(parti)-1
+        if index == total_index:
+            wiot = parti[0]
+        else:
+            wiot = parti[index+1]
+
+        # restaurant config
+        last_rest = last_ord.restaurant
+        index_res = last_rest.index(last_rest)
+        total_index_res = len(res)-1
+        if index_res == total_index_res:
+            next_rest = res[0]
+        else:
+            next_rest = res[index_res+1]
+    else:
+        wiot = u.name   # wiot = Who Is Ordering Today
+        next_rest = res[0] if res else ""
+
+    time_order = random_hour(time[0],time[1])   # generate random hour to eat
+    non_rest = False if res else True
+    return render_template("account_page.html",non_rest=non_rest,time_order=time_order, next_rest=next_rest, user=u,
+                           parti=parti,wiot=wiot, ord=ord, res=res,time=time)
+
+
+def random_hour(start,end):
+    list1 = list(start)
+    del list1[2]
+    list2 = list(end)
+    del list2[2]
+    start = int("".join(list1))
+    end = int("".join(list2))
+    num = end-start
+    num2 = str(start+randint(0,num))
+    if int(num2[-2]) > 5:
+        num3 = list(num2)
+        num3[-2] = randint(start[2],end[2])
+        str1 = "".join(num3)
+        num2 = str1
+
+    list3 = list(str(num2))
+    list3.insert(2,":")
+    return "".join(list3)
 
 
 # time configuration
@@ -108,7 +158,7 @@ def change_time():
     return redirect(url_for("account_page"))
 
 
-# participants and restaurants configuration
+# participants configuration
 @login_required
 @app.route("/account/add_participant/",methods=["POST"])
 def add_parti():
@@ -130,6 +180,7 @@ def delete_parti(name):
     return redirect(url_for("account_page"))
 
 
+# restaurants configuration
 @login_required
 @app.route("/account/add_restaurant/",methods=["POST"])
 def add_rest():
@@ -151,11 +202,13 @@ def delete_rest(name):
     return redirect(url_for("account_page"))
 
 
+# load user from db
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.filter(User.id == user_id).first()
 
 
+# closing connection with db
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     db_session.remove()

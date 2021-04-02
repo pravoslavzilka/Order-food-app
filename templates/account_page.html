@@ -28,7 +28,63 @@
     <div class="col-md-8 mx-auto">
         <!-- Profile widget -->
         <div class="bg-white shadow rounded overflow-hidden">
-			<button type="button" style="margin-top:10px;" class="btn btn-primary btn-lg btn-block">Make an Order</button>
+			<div class="row justify-content-center">
+			  <button style="margin-top:30px;" type="button" data-toggle="modal" data-target="#exampleModalLong" class="btn btn-primary btn-lg">Make the Order</button>
+			</div>
+
+			<!-- Modal -->
+			<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h5 class="modal-title" id="exampleModalLongTitle">Your Order is:</h5>
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			          <span aria-hidden="true">&times;</span>
+			        </button>
+			      </div>
+			      <div class="modal-body">
+			        <form>
+        			  <div class="form-group">
+        			    <label for="recipient-name" class="col-form-label">Who is ordering today ?</label>
+        			    <input type="text" value="{{wiot}}" class="form-control" id="recipient-name" readonly>
+        			  </div>
+						{% if non_rest %}
+							<div class="form-group">
+        			  		  <label for="recipient-name" class="col-form-label">Restaurant</label>
+        			  		  <input type="text" value="To order you must add some restaurant" class="form-control" readonly>
+        			  		</div>
+						{% else %}
+        			    	<div class="form-group">
+  							  <label for="exampleFormControlSelect1">Restaurant</label>
+  							  <select class="form-control" id="exampleFormControlSelect1">
+  							    {% for res in res %}
+								  {% if res == next_rest %}
+								  	<option selected value="res">{{res}}</option>
+								  {% else %}
+								  	<option value="res">{{res}}</option>
+								  {% endif %}
+								{% endfor %}
+  							  </select>
+  							</div>
+						{% endif %}
+						<div class="form-group ">
+						  <label>Time</label>
+				  		  <input style="width:70px;" name="time_from" type="time" value="{{ time_order }}" class="form-control">
+				  		</div>
+        			</form>
+			      </div>
+
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					{% if non_rest %}
+					    <button type="button" class="btn btn-primary" disabled>Order</button>
+					{% else %}
+			        	<button type="button" class="btn btn-primary">Order</button>
+					{% endif %}
+			      </div>
+			    </div>
+			  </div>
+			</div>
 
 
             <div class="px-4 py-3">
@@ -63,6 +119,7 @@
 
 			<div class="card" style="margin:30px;">
 			  <div class="card-body">
+				  <img style="height:35px;margin-bottom:5px;margin-right:5px;" src="{{url_for("static",filename="images/user_icon.png")}}">
 				  <strong>{{ user.name }}</strong>
 				  <label class="font-italic mb-0">(admin)</label>
 				  <label style="padding-left:3%;" class=" mb-0">Orders:--</label>
@@ -72,6 +129,7 @@
 			{% for parti in parti %}
 				<div class="card" style="margin:30px;">
 				  <div class="card-body">
+					  <img style="height:35px;margin-bottom:5px;margin-right:5px;" src="{{url_for("static",filename="images/user_icon.png")}}">
 					  <strong>{{ parti }}</strong>
 					  <label style="padding-left:3%;" class=" mb-0">Orders:--</label>
 					  <label style="padding-left:3%;" class=" mb-0">Fav. meal:--</label>
@@ -103,7 +161,8 @@
 			{% for res in res %}
 				<div class="card" style="margin:30px;">
 				  <div class="card-body">
-					  <strong>{{ res }}</strong>
+					  <img style="height:35px;" src="{{url_for("static",filename="images/res_icon2.jpg")}}">
+					  <strong style="padding-left:10px;">{{ res }}</strong>
 					  <a href="{{url_for("delete_rest",name=res)}}" style="margin-right:10px" class="btn btn-danger btn-sm float-right">Delete</a>
 				  </div>
 				</div>
