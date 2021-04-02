@@ -44,7 +44,7 @@ class User(Base):
 class Order(Base):
     __tablename__ = 'orders'
     id = Column(Integer, primary_key=True)
-    name = Column(String(50), unique=True)
+    name = Column(String(50))
     orders = Column(String(520), default="")
     restaurant = Column(String(1020), default="")
     time = Column(String(10), default="")

@@ -96,14 +96,21 @@ def account_page():
     parti = u.participants.split()  # participants
     res = u.restaurants.split() # restaurants
     time = u.time.split()
-    ord = Order.query.filter(User.name in parti).all()  # past orders
-    if ord:
+    all_parti = parti[:]
+    all_parti.append(u.name)
+
+    ord = Order.query.filter(User.name.in_(all_parti)).all()  # past orders
+    if ord and parti:
         # wiot configurations
         last_ord = ord[-1]
+
         parti.insert(0,u.name)
         last_person = last_ord.name
         index = parti.index(last_person)
         total_index = len(parti)-1
+        print(last_person)
+        print(parti)
+        print(index)
         if index == total_index:
             wiot = parti[0]
         else:
@@ -111,12 +118,15 @@ def account_page():
 
         # restaurant config
         last_rest = last_ord.restaurant
-        index_res = last_rest.index(last_rest)
+        index_res = res.index(last_rest)
         total_index_res = len(res)-1
         if index_res == total_index_res:
             next_rest = res[0]
+            print("sfsdfdf")
         else:
+            print("qeqwe")
             next_rest = res[index_res+1]
+        parti.pop(0)
     else:
         wiot = u.name   # wiot = Who Is Ordering Today
         next_rest = res[0] if res else ""
@@ -127,6 +137,7 @@ def account_page():
                            parti=parti,wiot=wiot, ord=ord, res=res,time=time)
 
 
+# function for generate random hour
 def random_hour(start,end):
     list1 = list(start)
     del list1[2]
@@ -138,13 +149,33 @@ def random_hour(start,end):
     num2 = str(start+randint(0,num))
     if int(num2[-2]) > 5:
         num3 = list(num2)
-        num3[-2] = randint(start[2],end[2])
+        num3[-2] = str(randint(int(list1[2]),int(list2[2])))
         str1 = "".join(num3)
         num2 = str1
 
     list3 = list(str(num2))
     list3.insert(2,":")
     return "".join(list3)
+
+
+@login_required
+@app.route("/account/make_the_order/",methods=["POST"])
+def make_the_order():
+    u = load_user(current_user.get_id())
+    orders = ""
+    for parti in u.participants.split():
+        orders += parti + " : " +request.form[f"{parti}_meal"]+", "
+
+    orders += u.name + " : " + request.form[u.name+"_meal"]
+
+    order = Order(request.form["wiot"])
+    order.restaurant = request.form["rest"]
+    order.time = request.form["time_of_order"]
+    order.orders = orders
+    db_session.add(order)
+    db_session.commit()
+    flash("You've just made the order !","success")
+    return redirect(url_for("account_page"))
 
 
 # time configuration
