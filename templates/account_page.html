@@ -28,6 +28,7 @@
     <div class="col-md-8 mx-auto">
         <!-- Profile widget -->
         <div class="bg-white shadow rounded overflow-hidden">
+			<button type="button" style="margin-top:10px;" class="btn btn-primary btn-lg btn-block">Make an Order</button>
 
 
             <div class="px-4 py-3">
@@ -40,6 +41,24 @@
 					<p class="font-italic mb-0"><strong>Your favorite time to eat:</strong> ---</p>
                 </div>
             </div>
+			<h5 style="padding-left:20px;" class="mb-0">Time:</h5>
+
+			<div class="card" style="margin:30px;">
+			  <div class="card-body">
+
+				<form class="form-inline" method="post" action="{{url_for("change_time")}}">
+					<label style="padding-right:10px;">From:</label>
+				  <div class="form-group ">
+
+				    <input name="time_from" type="time" value="{{ time[0] }}" class="form-control">
+					<label style="padding-right:10px;padding-left:10px;">To:</label>
+					<input name="time_to" type="time" value="{{ time[1] }}" class="form-control">
+				  </div>
+				  <button style="margin-left:10px;" type="submit" class="btn btn-primary">Set</button>
+				</form>
+
+			  </div>
+			</div>
 			<h5 style="padding-left:20px;" class="mb-0">Participants:</h5>
 
 			<div class="card" style="margin:30px;">
@@ -106,7 +125,6 @@
 				    + add restaurant
 				  </button>
 				</p>
-				<input type="time">
 			</div>
 
 

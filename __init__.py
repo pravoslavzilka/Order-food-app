@@ -78,6 +78,7 @@ def register_page2():
     else:
         u = User(username,email)
         u.set_password(password)
+        u.time = "12:00 14:00"
         db_session.add(u)
         db_session.commit()
         flash("Welcome to our site !","success")
@@ -89,14 +90,25 @@ def register_page2():
 @app.route("/account/")
 def account_page():
     u = load_user(current_user.get_id())
+    parti = u.participants.split()  # participants
+    res = u.restaurants.split() # restaurants
+    time = u.time.split()
+    ord = Order.query.filter(User.name in parti).first()  # past orders
+    return render_template("account_page.html", user=u, parti=parti, ord=ord, res=res,time=time)
 
-    # participants
-    parti = u.participants.split()
-    res = u.restaurants.split()
-    ord = Order.query.filter(User.name in parti).first()
-    return render_template("account_page.html", user=u, parti=parti, ord=ord, res=res)
+
+# time configuration
+@login_required
+@app.route("/account/change_time/",methods=["POST"])
+def change_time():
+    new_time = request.form["time_from"] + " " + request.form["time_to"]
+    u = load_user(current_user.get_id())
+    u.time = new_time
+    db_session.commit()
+    return redirect(url_for("account_page"))
 
 
+# participants and restaurants configuration
 @login_required
 @app.route("/account/add_participant/",methods=["POST"])
 def add_parti():
