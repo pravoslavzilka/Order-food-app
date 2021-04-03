@@ -159,6 +159,9 @@ def account_page():
             restaurants.append(order.restaurant)
         avg_times = int(sum(times)/len(times))
         avg_time2 = list(str(avg_times))
+        if int(avg_time2[2]) > 5:
+            avg_time2[2] = str(int(avg_time2[2])-6)
+            avg_time2[1] = str(int(avg_time2[1])+1)
         avg_time2.insert(2,":")
         avg_time3 = "".join(avg_time2)
         fav_restaurants = Counter(restaurants).most_common()[0][0]
@@ -292,5 +295,5 @@ def make_shell_context():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
 
